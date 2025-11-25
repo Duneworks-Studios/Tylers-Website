@@ -6,44 +6,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root {
-      --bg: #050511;
-      --accent: #00e5ff;
-      --accent-2: #ff00ff;
-      --text-main: #f5f7ff;
-      --text-muted: #9fa3c7;
-      --card-bg: rgba(6,6,26,0.98);
+      --accent: #0057FF;
+      --text-main: #0b1020;
+      --text-muted: #4b5563;
+      --card-bg: #ffffff;
+      --card-border: rgba(0,0,0,0.06);
     }
+
     * { box-sizing:border-box;margin:0;padding:0; }
+
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
         "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #181848 0, #050511 55%, #000 100%);
+      background:
+        radial-gradient(circle at top, rgba(0,87,255,0.12) 0, transparent 45%),
+        #f3f4f6;
       color: var(--text-main);
       min-height: 100vh;
       line-height: 1.6;
       overflow-x: hidden;
     }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-      background-size: 70px 70px;
-      opacity: 0.22;
-      mix-blend-mode: soft-light;
-      pointer-events: none;
-      z-index: -1;
-    }
+
     header {
       padding: 0.8rem 1.6rem;
       position: sticky;
       top: 0;
       z-index: 10;
-      background: radial-gradient(circle at top left, rgba(0,0,0,0.96), rgba(0,0,0,0.9));
-      border-bottom: 1px solid rgba(0,229,255,0.4);
-      box-shadow: 0 0 24px rgba(0,0,0,0.9);
+      background: #ffffff;
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      box-shadow: 0 4px 14px rgba(15,23,42,0.06);
     }
     .nav {
       max-width: 960px;
@@ -65,9 +56,9 @@
       height: 36px;
       border-radius: 999px;
       overflow: hidden;
-      border: 1px solid rgba(0,229,255,0.6);
-      box-shadow: 0 0 20px rgba(0,229,255,0.8);
-      background: radial-gradient(circle at 20% 0,#fff 0,#00e5ff 40%,#000 90%);
+      border: 1px solid rgba(0,87,255,0.5);
+      box-shadow: 0 0 12px rgba(0,87,255,0.45);
+      background: radial-gradient(circle at 20% 0,#ffffff 0,#0057FF 40%,#0b1020 90%);
       flex-shrink:0;
     }
     .logo-orb img {
@@ -84,7 +75,7 @@
       font-size:0.86rem;
       letter-spacing:0.18em;
       text-transform:uppercase;
-      color:#00e5ff;
+      color:var(--accent);
       font-weight:600;
     }
     .brand-text span:last-child {
@@ -99,34 +90,15 @@
       text-decoration:none;
     }
     .nav a.small-link:hover {
-      color:#00e5ff;
+      color:var(--accent);
     }
+
     main {
       max-width: 960px;
       margin: 0 auto;
       padding: 2.2rem 1.6rem 3rem;
     }
-    .headline {
-      margin-bottom:1.6rem;
-    }
-    .headline h1 {
-      font-size:0.85rem;
-      text-transform:uppercase;
-      letter-spacing:0.2em;
-      color:#00e5ff;
-      margin-bottom:0.3rem;
-    }
-    .headline h2 {
-      font-size:1.6rem;
-      letter-spacing:0.06em;
-      text-transform:uppercase;
-      margin-bottom:0.4rem;
-    }
-    .headline p {
-      font-size:0.88rem;
-      color:#c1c5ea;
-      max-width:34rem;
-    }
+
     .layout {
       display:grid;
       grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);
@@ -136,48 +108,52 @@
     @media (max-width: 860px) {
       .layout { grid-template-columns:minmax(0,1fr); }
     }
+
     .card {
       border-radius:20px;
       padding:1.4rem 1.5rem;
-      background:radial-gradient(circle at top left, rgba(0,229,255,0.18), transparent 55%), var(--card-bg);
-      border:1px solid rgba(0,229,255,0.5);
-      box-shadow:0 0 26px rgba(0,229,255,0.7);
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      box-shadow:0 16px 40px rgba(15,23,42,0.08);
     }
     .card h3 {
       font-size:1rem;
       text-transform:uppercase;
       letter-spacing:0.16em;
       margin-bottom:0.6rem;
+      color:#111827;
     }
     .card p {
       font-size:0.84rem;
-      color:#c1c5ea;
+      color:var(--text-muted);
       margin-bottom:0.9rem;
     }
+
     label {
       display:block;
       font-size:0.76rem;
       text-transform:uppercase;
       letter-spacing:0.15em;
-      color:#00e5ff;
+      color:var(--accent);
       margin-bottom:0.3rem;
     }
     input[type="text"],
+    input[type="password"],
     select,
     input[type="file"],
     textarea {
       width:100%;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.08);
-      background:rgba(6,6,26,0.98);
+      border-radius:10px;
+      border:1px solid rgba(148,163,184,0.8);
+      background:#f9fafb;
       padding:0.6rem 0.7rem;
-      color:#f5f7ff;
+      color:#111827;
       font-size:0.85rem;
       margin-bottom:0.8rem;
       outline:none;
       resize:vertical;
       min-height:0;
-      transition:border 0.2s ease-out, box-shadow 0.2s ease-out, background 0.2s ease-out;
+      transition:border 0.15s ease-out, box-shadow 0.15s ease-out, background 0.15s ease-out;
     }
     textarea {
       min-height:80px;
@@ -185,59 +161,64 @@
     input:focus,
     select:focus,
     textarea:focus {
-      border-color:rgba(0,229,255,0.9);
-      box-shadow:0 0 18px rgba(0,229,255,0.7);
-      background:rgba(4,4,24,1);
+      border-color:rgba(37,99,235,0.9);
+      box-shadow:0 0 0 1px rgba(37,99,235,0.35);
+      background:#ffffff;
     }
+
     button {
       padding:0.7rem 1.3rem;
       border-radius:999px;
-      border:1px solid rgba(0,229,255,0.8);
-      background:radial-gradient(circle at top left,#00e5ff55,#ff00ff33 42%,#000 90%);
-      color:#f5f7ff;
+      border:1px solid rgba(37,99,235,0.95);
+      background:linear-gradient(135deg,#0057FF,#60a5fa);
+      color:#ffffff;
       font-size:0.78rem;
       text-transform:uppercase;
       letter-spacing:0.16em;
       cursor:pointer;
-      box-shadow:0 0 20px rgba(0,229,255,0.8);
-      transition:transform 0.25s ease-out, box-shadow 0.25s ease-out, background 0.25s ease-out;
+      box-shadow:0 12px 30px rgba(37,99,235,0.35);
+      transition:transform 0.18s ease-out, box-shadow 0.18s ease-out;
     }
     button:hover {
       transform:translateY(-1px);
-      box-shadow:0 0 26px rgba(255,0,255,0.9);
-      background:radial-gradient(circle at top right,#ff00ff66,#00e5ff33 40%,#000 90%);
+      box-shadow:0 16px 35px rgba(37,99,235,0.45);
     }
+
     .note {
       font-size:0.78rem;
       color:var(--text-muted);
       margin-top:0.4rem;
     }
+
     .publishes-list {
       border-radius:20px;
       padding:1.2rem 1.3rem 1rem;
-      background:rgba(5,5,20,0.97);
-      border:1px solid rgba(255,255,255,0.08);
-      box-shadow:0 0 22px rgba(0,0,0,0.9);
+      background:#ffffff;
+      border:1px solid var(--card-border);
+      box-shadow:0 16px 40px rgba(15,23,42,0.08);
       max-height:420px;
       overflow-y:auto;
     }
+
     .row-btn {
       border-radius:999px;
-      border:1px solid rgba(0,229,255,0.7);
-      background:rgba(4,4,24,0.95);
+      border:1px solid rgba(148,163,184,0.9);
+      background:#f9fafb;
       padding:0.25rem 0.7rem;
       font-size:0.72rem;
       text-transform:uppercase;
       letter-spacing:0.14em;
       cursor:pointer;
     }
+
     .publishes-list h4 {
       font-size:0.86rem;
       text-transform:uppercase;
       letter-spacing:0.16em;
       margin-bottom:0.8rem;
-      color:#00e5ff;
+      color:#111827;
     }
+
     .publish-item {
       display:flex;
       gap:0.7rem;
@@ -249,8 +230,9 @@
       height:54px;
       border-radius:10px;
       overflow:hidden;
-      border:1px solid rgba(0,229,255,0.55);
+      border:1px solid rgba(148,163,184,0.9);
       flex-shrink:0;
+      background:#020617;
     }
     .publish-thumb img {
       width:100%;
@@ -259,6 +241,7 @@
     }
     .publish-info {
       font-size:0.8rem;
+      color:#111827;
     }
     .publish-info strong {
       display:block;
@@ -270,8 +253,9 @@
       font-size:0.72rem;
       letter-spacing:0.16em;
       text-transform:uppercase;
-      color:#9fa3c7;
+      color:var(--text-muted);
     }
+
     .toast {
       position:fixed;
       bottom:1.4rem;
@@ -280,20 +264,19 @@
       padding:0.8rem 1rem;
       border-radius:14px;
       font-size:0.8rem;
-      background:rgba(5,5,22,0.96);
-      color:#f5f7ff;
-      border:1px solid rgba(0,229,255,0.7);
-      box-shadow:0 0 22px rgba(0,0,0,0.85);
+      background:#111827;
+      color:#f9fafb;
+      border:1px solid rgba(37,99,235,0.9);
+      box-shadow:0 16px 40px rgba(15,23,42,0.7);
       display:none;
       z-index:20;
     }
     .toast.error {
-      border-color:rgba(255,0,120,0.9);
-      box-shadow:0 0 26px rgba(255,0,120,0.9);
+      border-color:rgba(220,38,38,0.95);
     }
     .toast.show {
       display:block;
-      animation:toastIn 0.28s ease-out, toastOut 0.3s ease-in 3.1s forwards;
+      animation:toastIn 0.18s ease-out, toastOut 0.2s ease-in 3.1s forwards;
     }
     @keyframes toastIn {
       from { transform:translateY(8px); opacity:0; }
@@ -302,18 +285,18 @@
     @keyframes toastOut {
       to { transform:translateY(6px); opacity:0; }
     }
-  
+
     .discord-btn {
       padding: 0.6rem 1.15rem;
       border-radius: 999px;
-      border: 1px solid rgba(114,137,218,0.95);
-      background: radial-gradient(circle at top left, rgba(114,137,218,0.85), rgba(0,0,0,0.95));
+      border: 1px solid rgba(79,70,229,0.95);
+      background: linear-gradient(135deg, rgba(79,70,229,1), rgba(129,140,248,1));
       color: #ffffff;
       text-decoration: none;
       text-transform: uppercase;
       letter-spacing: 0.16em;
       font-size: 0.78rem;
-      box-shadow: 0 0 22px rgba(114,137,218,0.8);
+      box-shadow: 0 12px 30px rgba(79,70,229,0.4);
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
@@ -322,7 +305,6 @@
     .discord-btn span {
       font-size: 1rem;
     }
-
   </style>
 </head>
 <body>
@@ -394,7 +376,7 @@
           <code>localStorage</code> so you can see how a dev publish system would behave.
         </p>
         <a class="discord-btn" href="https://discord.gg/uAGrNRhP" target="_blank" rel="noopener noreferrer">
-          <span>⮕</span> Join the Discord
+          <span></span> Join the Discord
         </a>
       </section>
 
@@ -411,7 +393,7 @@
 
   <script>
     const DEV_PASSWORD = "tJ7$QkG3u!9xR2zP@Fh4vbN8#Wc0LmY^pS5*rAZqU1&yHdE6Kf%oTgJ$Xn3";
-    const ADMIN_PASSWORD = "X9!fAq7$kR2u🗽tB4@VmZ8#wL6^pY3*DqH9!sU2&cJ7%rN5+Kx1?eT4~Gv8$M0^hF2*Qj9!bW6@zC3#nR7%yP1+Lk4?Sg8~Hd5$F0^Jm2*Vx9!aU6@pE3#tZ7%qN1+Rk4?Wg8~Xy7!🗽aB9$Lp3^Qs0&";
+    const ADMIN_PASSWORD = "X9!fAq7$kR2utB4@VmZ8#wL6^pY3*DqH9!sU2&cJ7%rN5+Kx1?eT4~Gv8$M0^hF2*Qj9!bW6@zC3#nR7%yP1+Lk4?Sg8~Hd5$F0^Jm2*Vx9!aU6@pE3#tZ7%qN1+Rk4?Wg8~Xy7!aB9$Lp3^Qs0&";
 
     const loginCard = document.getElementById("login-card");
     const devPanel = document.getElementById("dev-panel");

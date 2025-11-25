@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Render Studio • Dev Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --accent: #0057FF;
+      --text-main: #0b1020;
+      --text-muted: #4b5563;
+      --card-bg: #ffffff;
+      --card-border: rgba(0,0,0,0.06);
+    }
+
+    * { box-sizing:border-box;margin:0;padding:0; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(0,87,255,0.12) 0, transparent 45%),
+        #f3f4f6;
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 0.8rem 1.6rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #ffffff;
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      box-shadow: 0 4px 14px rgba(15,23,42,0.06);
+    }
+    .nav {
+      max-width: 960px;
+      margin: 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+    }
+    .logo-wrap {
+      display:flex;
+      align-items:center;
+      gap:0.7rem;
+      text-decoration:none;
+      color:inherit;
+    }
+    .logo-orb {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(0,87,255,0.5);
+      box-shadow: 0 0 12px rgba(0,87,255,0.45);
+      background: radial-gradient(circle at 20% 0,#ffffff 0,#0057FF 40%,#0b1020 90%);
+      flex-shrink:0;
+    }
+    .logo-orb img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+    .brand-text {
+      display:flex;
+      flex-direction:column;
+      gap:0.1rem;
+    }
+    .brand-text span:first-child {
+      font-size:0.86rem;
+      letter-spacing:0.18em;
+      text-transform:uppercase;
+      color:var(--accent);
+      font-weight:600;
+    }
+    .brand-text span:last-child {
+      font-size:0.72rem;
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+      color:var(--text-muted);
+    }
+    .nav a.small-link {
+      font-size:0.78rem;
+      color:var(--text-muted);
+      text-decoration:none;
+    }
+    .nav a.small-link:hover {
+      color:var(--accent);
+    }
+
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2.2rem 1.6rem 3rem;
+    }
+
+    .layout {
+      display:grid;
+      grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);
+      gap:1.7rem;
+      align-items:flex-start;
+    }
+    @media (max-width: 860px) {
+      .layout { grid-template-columns:minmax(0,1fr); }
+    }
+
+    .card {
+      border-radius:20px;
+      padding:1.4rem 1.5rem;
+      background:var(--card-bg);
+      border:1px solid var(--card-border);
+      box-shadow:0 16px 40px rgba(15,23,42,0.08);
+    }
+    .card h3 {
+      font-size:1rem;
+      text-transform:uppercase;
+      letter-spacing:0.16em;
+      margin-bottom:0.6rem;
+      color:#111827;
+    }
+    .card p {
+      font-size:0.84rem;
+      color:var(--text-muted);
+      margin-bottom:0.9rem;
+    }
+
+    label {
+      display:block;
+      font-size:0.76rem;
+      text-transform:uppercase;
+      letter-spacing:0.15em;
+      color:var(--accent);
+      margin-bottom:0.3rem;
+    }
+    input[type="text"],
+    input[type="password"],
+    select,
+    input[type="file"],
+    textarea {
+      width:100%;
+      border-radius:10px;
+      border:1px solid rgba(148,163,184,0.8);
+      background:#f9fafb;
+      padding:0.6rem 0.7rem;
+      color:#111827;
+      font-size:0.85rem;
+      margin-bottom:0.8rem;
+      outline:none;
+      resize:vertical;
+      min-height:0;
+      transition:border 0.15s ease-out, box-shadow 0.15s ease-out, background 0.15s ease-out;
+    }
+    textarea {
+      min-height:80px;
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color:rgba(37,99,235,0.9);
+      box-shadow:0 0 0 1px rgba(37,99,235,0.35);
+      background:#ffffff;
+    }
+
+    button {
+      padding:0.7rem 1.3rem;
+      border-radius:999px;
+      border:1px solid rgba(37,99,235,0.95);
+      background:linear-gradient(135deg,#0057FF,#60a5fa);
+      color:#ffffff;
+      font-size:0.78rem;
+      text-transform:uppercase;
+      letter-spacing:0.16em;
+      cursor:pointer;
+      box-shadow:0 12px 30px rgba(37,99,235,0.35);
+      transition:transform 0.18s ease-out, box-shadow 0.18s ease-out;
+    }
+    button:hover {
+      transform:translateY(-1px);
+      box-shadow:0 16px 35px rgba(37,99,235,0.45);
+    }
+
+    .note {
+      font-size:0.78rem;
+      color:var(--text-muted);
+      margin-top:0.4rem;
+    }
+
+    .publishes-list {
+      border-radius:20px;
+      padding:1.2rem 1.3rem 1rem;
+      background:#ffffff;
+      border:1px solid var(--card-border);
+      box-shadow:0 16px 40px rgba(15,23,42,0.08);
+      max-height:420px;
+      overflow-y:auto;
+    }
+
+    .row-btn {
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,0.9);
+      background:#f9fafb;
+      padding:0.25rem 0.7rem;
+      font-size:0.72rem;
+      text-transform:uppercase;
+      letter-spacing:0.14em;
+      cursor:pointer;
+    }
+
+    .publishes-list h4 {
+      font-size:0.86rem;
+      text-transform:uppercase;
+      letter-spacing:0.16em;
+      margin-bottom:0.8rem;
+      color:#111827;
+    }
+
+    .publish-item {
+      display:flex;
+      gap:0.7rem;
+      margin-bottom:0.9rem;
+      align-items:flex-start;
+    }
+    .publish-thumb {
+      width:76px;
+      height:54px;
+      border-radius:10px;
+      overflow:hidden;
+      border:1px solid rgba(148,163,184,0.9);
+      flex-shrink:0;
+      background:#020617;
+    }
+    .publish-thumb img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+    .publish-info {
+      font-size:0.8rem;
+      color:#111827;
+    }
+    .publish-info strong {
+      display:block;
+      margin-bottom:0.18rem;
+    }
+    .publish-info span {
+      display:inline-block;
+      margin-bottom:0.18rem;
+      font-size:0.72rem;
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+      color:var(--text-muted);
+    }
+
+    .toast {
+      position:fixed;
+      bottom:1.4rem;
+      right:1.5rem;
+      max-width:260px;
+      padding:0.8rem 1rem;
+      border-radius:14px;
+      font-size:0.8rem;
+      background:#111827;
+      color:#f9fafb;
+      border:1px solid rgba(37,99,235,0.9);
+      box-shadow:0 16px 40px rgba(15,23,42,0.7);
+      display:none;
+      z-index:20;
+    }
+    .toast.error {
+      border-color:rgba(220,38,38,0.95);
+    }
+    .toast.show {
+      display:block;
+      animation:toastIn 0.18s ease-out, toastOut 0.2s ease-in 3.1s forwards;
+    }
+    @keyframes toastIn {
+      from { transform:translateY(8px); opacity:0; }
+      to   { transform:translateY(0); opacity:1; }
+    }
+    @keyframes toastOut {
+      to { transform:translateY(6px); opacity:0; }
+    }
+
+    .discord-btn {
+      padding: 0.6rem 1.15rem;
+      border-radius: 999px;
+      border: 1px solid rgba(79,70,229,0.95);
+      background: linear-gradient(135deg, rgba(79,70,229,1), rgba(129,140,248,1));
+      color: #ffffff;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.78rem;
+      box-shadow: 0 12px 30px rgba(79,70,229,0.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
+    .discord-btn span {
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <a href="/" class="logo-wrap">
+        <div class="logo-orb">
+          <img src="Artboard_9.png" alt="Render Studio logo" />
+        </div>
+        <div class="brand-text">
+          <span>Render Studio</span>
+          <span>Developer panel</span>
+        </div>
+      </a>
+      <a class="small-link" href="/" target="_blank" rel="noopener noreferrer">Open main site ↗</a>
+    </div>
+  </header>
+
+  <main>
+
+    <div class="card" id="login-card" style="margin-bottom:1.8rem;">
+      <h3>Developer login</h3>
+      <p>Enter the developer password to unlock the publish tools.</p>
+      <form id="login-form">
+        <label for="dev-password">Password</label>
+        <input id="dev-password" type="password" autocomplete="off" placeholder="Enter dev password" />
+
+        <label for="login-name">Your dev name (for normal dev access)</label>
+        <input id="login-name" type="text" autocomplete="off" placeholder="Example: Dripzel, Staff_Dev, etc." />
+
+        <button type="submit">Unlock dev panel</button>
+      </form>
+      <p class="note">Use the normal dev password with your name, or the admin password to manage everything.</p>
+    </div>
+
+    <div class="layout" id="dev-panel">
+      <section class="card">
+        <h3>New publish</h3>
+        <p>Fill in the details and attach an image. All fields are required for the publish to send.</p>
+        <form id="publish-form">
+          <label for="publish-name">Pack / asset name</label>
+          <input id="publish-name" type="text" placeholder="Example: Highway Patrol Pack v2" />
+
+          <label for="publish-author">Your name</label>
+          <input id="publish-author" type="text" placeholder="Example: Dripzel, Staff_Dev, etc." />
+
+          <label for="publish-type">Type</label>
+          <select id="publish-type">
+            <option value="">Select type…</option>
+            <option value="Livery">Livery</option>
+            <option value="Clothing">Clothing</option>
+            <option value="ELS">ELS</option>
+            <option value="Discord design">Discord design</option>
+            <option value="Bot">Bot</option>
+            <option value="Premade">Premade pack</option>
+            <option value="Other">Other</option>
+          </select>
+
+          <label for="publish-desc">Short description</label>
+          <textarea id="publish-desc" placeholder="One or two lines about what this pack includes…"></textarea>
+
+          <label for="publish-image">Preview image</label>
+          <input id="publish-image" type="file" accept="image/*" />
+
+          <button type="submit">Publish to preview wall</button>
+        </form>
+        <p class="note">
+          This does <strong>not</strong> upload to a server. It just writes to
+          <code>localStorage</code> so you can see how a dev publish system would behave.
+        </p>
+        <a class="discord-btn" href="https://discord.gg/uAGrNRhP" target="_blank" rel="noopener noreferrer">
+          <span></span> Join the Discord
+        </a>
+      </section>
+
+      <aside class="publishes-list">
+        <h4>Publishes (this browser)</h4>
+        <div id="publish-items">
+          <p class="note">Nothing published yet. Submit something on the left to see it here.</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const DEV_PASSWORD = "tJ7$QkG3u!9xR2zP@Fh4vbN8#Wc0LmY^pS5*rAZqU1&yHdE6Kf%oTgJ$Xn3";
+    const ADMIN_PASSWORD = "X9!fAq7$kR2utB4@VmZ8#wL6^pY3*DqH9!sU2&cJ7%rN5+Kx1?eT4~Gv8$M0^hF2*Qj9!bW6@zC3#nR7%yP1+Lk4?Sg8~Hd5$F0^Jm2*Vx9!aU6@pE3#tZ7%qN1+Rk4?Wg8~Xy7!aB9$Lp3^Qs0&";
+
+    const loginCard = document.getElementById("login-card");
+    const devPanel = document.getElementById("dev-panel");
+    const loginForm = document.getElementById("login-form");
+    const loginInput = document.getElementById("dev-password");
+    const loginNameInput = document.getElementById("login-name");
+
+    const form = document.getElementById("publish-form");
+    const nameInput = document.getElementById("publish-name");
+    const authorInput = document.getElementById("publish-author");
+    const typeSelect = document.getElementById("publish-type");
+    const descInput = document.getElementById("publish-desc");
+    const imgInput = document.getElementById("publish-image");
+    const listEl = document.getElementById("publish-items");
+    const toastEl = document.getElementById("toast");
+
+    let currentRole = null; // "admin" or "dev"
+    let currentName = "";
+
+    function showToast(msg, error=false) {
+      toastEl.textContent = msg;
+      toastEl.className = "toast" + (error ? " error" : "");
+      toastEl.classList.add("show");
+      setTimeout(() => toastEl.classList.remove("show"), 3300);
+    }
+
+    function getPublishes() {
+      try {
+        const raw = localStorage.getItem("renderStudioPublishes");
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function savePublishes(list) {
+      try {
+        localStorage.setItem("renderStudioPublishes", JSON.stringify(list));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function canManage(item) {
+      if (!item) return false;
+      if (currentRole === "admin") return true;
+      if (currentRole === "dev") {
+        if (!currentName) return false;
+        return String(item.author || "").toLowerCase() === currentName.toLowerCase();
+      }
+      return false;
+    }
+
+    function renderPublishes() {
+      const list = getPublishes();
+      listEl.innerHTML = "";
+      if (!list.length) {
+        const p = document.createElement("p");
+        p.className = "note";
+        p.textContent = "Nothing published yet. Submit something on the left to see it here.";
+        listEl.appendChild(p);
+        return;
+      }
+      list.forEach(item => {
+        if (!item || !item.src) return;
+        const row = document.createElement("div");
+        row.className = "publish-item";
+        row.dataset.id = item.ts;
+        row.innerHTML = `
+          <div class="publish-thumb">
+            <img src="${item.src}" alt="${(item.name || "Publish") + " preview"}" />
+          </div>
+          <div class="publish-info">
+            <strong>${item.name || "Untitled pack"}</strong>
+            <span>${item.type || "Pack"}</span>
+            <div>Made by ${item.author || "Unknown"}</div>
+            <div>${item.desc || ""}</div>
+            <div style="margin-top:0.35rem; display:flex; gap:0.35rem; flex-wrap:wrap;">
+              <button type="button" class="row-btn delete-publish">Delete</button>
+              <button type="button" class="row-btn edit-publish">Edit</button>
+            </div>
+          </div>
+        `;
+        listEl.appendChild(row);
+      });
+    }
+
+    if (listEl) {
+      listEl.addEventListener("click", (e) => {
+        const target = e.target;
+        const row = target.closest(".publish-item");
+        if (!row) return;
+        const id = Number(row.dataset.id || 0);
+        if (!id) return;
+
+        let list = getPublishes();
+        const idx = list.findIndex(it => it && Number(it.ts) === id);
+        if (idx === -1) return;
+        const item = list[idx];
+
+        if (target.classList.contains("delete-publish")) {
+          if (!canManage(item)) {
+            showToast("You can only delete your own listings (or use the admin password).", true);
+            return;
+          }
+          list.splice(idx, 1);
+          savePublishes(list);
+          renderPublishes();
+          showToast("Listing deleted.");
+        }
+
+        if (target.classList.contains("edit-publish")) {
+          if (currentRole !== "admin") {
+            showToast("Only dev admin can edit listings.", true);
+            return;
+          }
+          const newName = window.prompt("Edit name:", item.name || "");
+          if (newName === null) return;
+          const newType = window.prompt("Edit type:", item.type || "");
+          if (newType === null) return;
+          const newDesc = window.prompt("Edit description:", item.desc || "");
+          if (newDesc === null) return;
+          item.name = newName.trim() || item.name;
+          item.type = newType.trim() || item.type;
+          item.desc = newDesc.trim();
+          list[idx] = item;
+          savePublishes(list);
+          renderPublishes();
+          showToast("Listing updated.");
+        }
+      });
+    }
+
+    if (loginForm && loginInput && loginCard && devPanel) {
+      loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const value = loginInput.value || "";
+        const devName = (loginNameInput && loginNameInput.value || "").trim();
+
+        if (value === ADMIN_PASSWORD) {
+          currentRole = "admin";
+          currentName = "Dev Admin";
+          loginCard.style.display = "none";
+          devPanel.style.display = "grid";
+          try {
+            sessionStorage.setItem("renderStudioDevRole", "admin");
+            sessionStorage.setItem("renderStudioDevName", currentName);
+          } catch (e) {}
+          showToast("Developer admin access granted.");
+        } else if (value === DEV_PASSWORD) {
+          if (!devName) {
+            showToast("Enter your dev name to log in.", true);
+            return;
+          }
+          currentRole = "dev";
+          currentName = devName;
+          loginCard.style.display = "none";
+          devPanel.style.display = "grid";
+          try {
+            sessionStorage.setItem("renderStudioDevRole", "dev");
+            sessionStorage.setItem("renderStudioDevName", currentName);
+          } catch (e) {}
+          showToast("Developer access granted.");
+        } else {
+          showToast("Wrong password.", true);
+        }
+      });
+
+      // auto-unlock if session says so
+      try {
+        const storedRole = sessionStorage.getItem("renderStudioDevRole");
+        const storedName = sessionStorage.getItem("renderStudioDevName") || "";
+        if (storedRole === "admin" || storedRole === "dev") {
+          currentRole = storedRole;
+          currentName = storedName;
+          loginCard.style.display = "none";
+          devPanel.style.display = "grid";
+        } else {
+          devPanel.style.display = "none";
+        }
+      } catch (e) {
+        devPanel.style.display = "none";
+      }
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = nameInput.value.trim();
+      const type = typeSelect.value.trim();
+      let author = authorInput.value.trim();
+      const desc = descInput.value.trim();
+      const file = imgInput.files[0];
+
+      if (!name && !file) {
+        showToast("You did not enter the name or select an image.", true);
+        return;
+      }
+      if (!name) {
+        showToast("You did not enter the name of the pack.", true);
+        return;
+      }
+      if (!type) {
+        showToast("You did not select the type.", true);
+        return;
+      }
+      if (!author && currentName) {
+        author = currentName;
+      }
+      if (!author) {
+        showToast("You did not enter your name.", true);
+        return;
+      }
+      if (!file) {
+        showToast("You did not upload an image.", true);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const src = ev.target.result;
+        const list = getPublishes();
+        list.unshift({ name, type, author, desc, src, ts: Date.now() });
+        if (list.length > 40) list.splice(40);
+        savePublishes(list);
+        renderPublishes();
+        showToast("Publish added to this browser's preview wall.");
+        form.reset();
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Initial render (only affects side list, main site reads from same storage key)
+    renderPublishes();
+  </script>
+</body>
+</html>
